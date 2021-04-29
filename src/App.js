@@ -5,33 +5,57 @@ import "./App.css";
 const App = () => {
   const [foods, setFoods] = useState([]);
   const [foodName, setFoodName] = useState("");
+  const [editFoodName, setEditFoodName] = useState("");
   const [daysSince, setDaysSince] = useState(0);
 
   useEffect(() => {
-    const getFoods = async () => {
-      const res = await axios.get("http://localhost:5000/foods");
-      setFoods(res.data);
-    };
     getFoods();
   }, []);
 
+  const getFoods = async () => {
+    const res = await axios.get("http://localhost:5000/foods");
+    setFoods(res.data);
+  };
+
   const addToList = async (e) => {
-    const res = await axios.post("http://localhost:5000/foods", {
+    await axios.post("http://localhost:5000/foods", {
       name: foodName,
       daysSinceEaten: daysSince,
     });
-    setFoods([...foods, res.data]);
+    getFoods();
     setFoodName("");
     setDaysSince(0);
+  };
+
+  const updateFood = async (_id) => {
+    await axios.patch(`http://localhost:5000/foods/${_id}`, {
+      name: editFoodName,
+    });
+    getFoods();
+    setEditFoodName("");
+  };
+
+  const deleteFood = async (_id) => {
+    await axios.delete(`http://localhost:5000/foods/${_id}`);
+    getFoods();
   };
 
   const renderFoods = () => {
     return foods.map((food) => {
       return (
-        <h4 key={food.id}>
-          {food.name} - {food.daysSinceEaten}{" "}
-          {food.daysSinceEaten === 1 ? "day" : "days"} ago
-        </h4>
+        <div key={food._id} className="food">
+          <h3>
+            {food.name} - {food.daysSinceEaten}{" "}
+            {food.daysSinceEaten === 1 ? "day" : "days"} ago
+          </h3>
+          <input
+            type="text"
+            placeholder="Edit Food Name..."
+            onChange={(e) => setEditFoodName(e.target.value)}
+          />
+          <button onClick={() => updateFood(food._id)}>Update</button>
+          <button onClick={() => deleteFood(food._id)}>Delete</button>
+        </div>
       );
     });
   };
