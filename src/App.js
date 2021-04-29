@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [foodName, setFoodName] = useState("");
+  const [daysSince, setDaysSince] = useState(0);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Food Crud App with MERN</h1>
+
+      <label for="name">Food Name: </label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        value={foodName}
+        onChange={(e) => setFoodName(e.target.value)}
+      />
+      <label for="daysSinceEaten">Days Since Eaten: </label>
+      <input
+        type="number"
+        name="daysSinceEaten"
+        id="daysSinceEaten"
+        value={daysSince}
+        onChange={(e) => setDaysSince(e.target.value)}
+      />
+      <button type="submit">Add Food</button>
     </div>
   );
-}
+};
 
 export default App;
